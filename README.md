@@ -1,10 +1,14 @@
 # perfLoad perfMon
 
-The monitoring tool for capturing system metrics such as CPU, memory, IO, network, etc.
+**The monitoring tool for capturing system metrics such as CPU, memory, IO, network, etc.**
 
-perfLoad is currently being open-sourced. Sources and documentation
-will be transferred to Github. We are hoping to finish this process
-by March 2013.
+---
+
+perfLoad is [mgm's](http://www.mgm-tp.com) load and performance testing framework.
+
+[perfLoad Wiki](https://github.com/mgm-tp/perfload/wiki)
+
+[perfLoad Issues](https://github.com/mgm-tp/perfload/issues)
 
 ---
 
