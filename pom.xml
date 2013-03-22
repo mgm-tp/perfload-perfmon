@@ -25,7 +25,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mgmtp.perfload</groupId>
 	<artifactId>perfload-perfmon</artifactId>
-	<version>2.2</version>
+	<version>2.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>mgm perfLoad perfMon</name>
 	<description>mgm perfLoad perfMon</description>
@@ -41,7 +41,7 @@
 		<connection>scm:git:git://github.com/mgm-tp/perfload-perfmon.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/mgm-tp/perfload-perfmon.git</developerConnection>
 		<url>https://github.com/mgm-tp/perfload-perfmon</url>
-	  <tag>perfload-perfmon-2.2</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<licenses>
