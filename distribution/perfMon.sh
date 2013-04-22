@@ -17,7 +17,7 @@
 
 
 cd `dirname $0`
-. ./setenv.sh
+[ -f setenv.sh ] && . ./setenv.sh
 
 if [ "x$JAVA_HOME" = "x" ] ; then
 	echo ERROR: JAVA_HOME not found in your environment.
