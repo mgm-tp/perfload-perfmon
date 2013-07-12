@@ -35,16 +35,6 @@
 			<directory>${basedir}/distribution</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
-				<include>*.sh</include>
-			</includes>
-			<fileMode>755</fileMode>
-			<lineEnding>unix</lineEnding>
-			<filtered>true</filtered>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/distribution</directory>
-			<outputDirectory>/</outputDirectory>
-			<includes>
 				<include>*.cmd</include>
 				<include>readme.txt</include>
 			</includes>
@@ -57,6 +47,9 @@
 				<exclude>*.sh</exclude>
 				<exclude>*.cmd</exclude>
 			</excludes>
+			<fileMode>755</fileMode>
+			<lineEnding>unix</lineEnding>
+			<filtered>true</filtered>
 		</fileSet>
 	</fileSets>
 	<dependencySets>
