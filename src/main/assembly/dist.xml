@@ -32,26 +32,30 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${basedir}/distribution</directory>
-			<outputDirectory>/</outputDirectory>
-			<includes>
-				<include>*.cmd</include>
-				<include>readme.txt</include>
-			</includes>
-			<filtered>true</filtered>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/distribution</directory>
-			<outputDirectory>/</outputDirectory>
-			<excludes>
-				<exclude>*.sh</exclude>
-				<exclude>*.cmd</exclude>
-			</excludes>
-			<fileMode>755</fileMode>
-			<lineEnding>unix</lineEnding>
-			<filtered>true</filtered>
+			<directory>${basedir}/distribution/lib</directory>
+			<outputDirectory>/lib</outputDirectory>
 		</fileSet>
 	</fileSets>
+	<files>
+		<file>
+			<source>${basedir}/distribution/perfmon</source>
+			<fileMode>775</fileMode>
+			<lineEnding>lf</lineEnding>
+			<filtered>true</filtered>
+			<outputDirectory>/</outputDirectory>
+		</file>
+		<file>
+			<source>${basedir}/distribution/perfmon.cmd</source>
+			<lineEnding>crlf</lineEnding>
+			<filtered>true</filtered>
+			<outputDirectory>/</outputDirectory>
+		</file>
+		<file>
+			<source>${basedir}/distribution/readme.txt</source>
+			<lineEnding>lf</lineEnding>
+			<outputDirectory>/</outputDirectory>
+		</file>
+	</files>
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
