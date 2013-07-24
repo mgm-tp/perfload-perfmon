@@ -25,6 +25,7 @@ public class ConsoleOutputHandler implements OutputHandler {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void open() {
 		// no-op
 	}
@@ -32,6 +33,7 @@ public class ConsoleOutputHandler implements OutputHandler {
 	/**
 	 * Delegates to {@code System.out.println}
 	 */
+	@Override
 	public void writeln(final String output) {
 		System.out.println(output);
 	}
@@ -39,6 +41,7 @@ public class ConsoleOutputHandler implements OutputHandler {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void close() {
 		// no-op
 	}

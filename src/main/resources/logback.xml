@@ -19,7 +19,7 @@
 <configuration>
 	<appender name="file" class="ch.qos.logback.core.FileAppender">
 		<append>true</append>
-		<file>perfMon.log</file>
+		<file>perfmon.log</file>
 		<encoder>
 			<pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n</pattern>
 		</encoder>

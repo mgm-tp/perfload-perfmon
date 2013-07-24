@@ -39,6 +39,7 @@ public class FileOutputHandler implements OutputHandler {
 	/**
 	 * Opens a {@link PrintWriter} to the output file using UTF-8 encoding.
 	 */
+	@Override
 	public void open() throws IOException {
 		writer = new PrintWriter(fileName, "UTF-8");
 	}
@@ -47,6 +48,7 @@ public class FileOutputHandler implements OutputHandler {
 	 * Writes and flushes the output to the internal {@link PrintWriter} using
 	 * {@link PrintWriter#println(String)} and {@link PrintWriter#flush()}.
 	 */
+	@Override
 	public void writeln(final String output) {
 		writer.println(output);
 		writer.flush();
@@ -55,6 +57,7 @@ public class FileOutputHandler implements OutputHandler {
 	/**
 	 * Closes the internal {@link PrintWriter}.
 	 */
+	@Override
 	public void close() {
 		writer.close();
 	}
