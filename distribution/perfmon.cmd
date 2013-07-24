@@ -44,13 +44,11 @@ set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path=lib -jar .\lib\perfload-perfmon-${
 
 call %JAVA_CMD% %JAVA_OPTS%
 
-if ERRORLEVEL -1 goto error
+if %errorlevel% neq 0 goto error
 goto end
 
 :error
-set EXIT_CODE=-1
+exit /B %errorlevel%
 
 :end
 @endlocal
-
-exit /B %EXIT_CODE%
