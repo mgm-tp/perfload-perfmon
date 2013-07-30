@@ -79,10 +79,11 @@ class PerfMon {
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
 	// It is important to use SigarProxyCache and to reuse the instance in order to avoid CPU spikes.
-	final SigarProxy sigar = SigarProxyCache.newInstance(new Sigar());
+	private final SigarProxy sigar;
 
-	PerfMon(final long interval, final boolean csv, final List<BasePerfMonCommand> commands,
+	PerfMon(final SigarProxy sigar, final long interval, final boolean csv, final List<BasePerfMonCommand> commands,
 			final OutputHandler outputHandler) {
+		this.sigar = sigar;
 		this.interval = interval;
 		this.csv = csv;
 		this.commands = commands;
@@ -213,8 +214,14 @@ class PerfMon {
 			try {
 				outputHandler.open();
 
+				// Initialize Sigar libraries in order to fail fast.
+				// Lazy initialization would cause perfMon to keep running logging errors all the time.
+				// See https://github.com/mgm-tp/perfload/issues/3
+				Sigar.load();
+
+				SigarProxy sigarProxy = SigarProxyCache.newInstance(new Sigar());
 				List<BasePerfMonCommand> commands = createCommandsList(csv, java, tcp, normalizeTcp, netstat, normalizeIo);
-				final PerfMon perfMon = new PerfMon(interval, csv, commands, outputHandler);
+				final PerfMon perfMon = new PerfMon(sigarProxy, interval, csv, commands, outputHandler);
 
 				Runtime.getRuntime().addShutdownHook(new Thread() {
 					@Override
@@ -227,6 +234,8 @@ class PerfMon {
 				perfMon.scheduleInformationGathering();
 			} catch (IOException ex) {
 				LOG.error("Error opening output file: " + fileName, ex);
+			} catch (SigarException ex) {
+				LOG.error(ex.getMessage(), ex);
 			}
 		}
 	}
