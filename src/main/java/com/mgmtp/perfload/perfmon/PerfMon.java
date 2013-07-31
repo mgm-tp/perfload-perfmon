@@ -196,8 +196,16 @@ class PerfMon {
 		CommandLine cmd = parseArgs(args);
 
 		if (cmd != null) {
+			final Sigar sigar = new Sigar();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					sigar.close();
+				}
+			});
+
 			if (cmd.hasOption('s')) {
-				shutdown();
+				shutdown(sigar);
 				return;
 			}
 
@@ -219,7 +227,7 @@ class PerfMon {
 				// See https://github.com/mgm-tp/perfload/issues/3
 				Sigar.load();
 
-				SigarProxy sigarProxy = SigarProxyCache.newInstance(new Sigar());
+				SigarProxy sigarProxy = SigarProxyCache.newInstance(sigar);
 				List<BasePerfMonCommand> commands = createCommandsList(csv, java, tcp, normalizeTcp, netstat, normalizeIo);
 				final PerfMon perfMon = new PerfMon(sigarProxy, interval, csv, commands, outputHandler);
 
@@ -240,10 +248,9 @@ class PerfMon {
 		}
 	}
 
-	static void shutdown() {
+	static void shutdown(final Sigar sigar) {
 		LOG.info("Shutting down perfMon...");
 
-		Sigar sigar = new Sigar();
 		String[] type = new String[] { "State.Name.sw=java,Args.*.re=perf(m|M)on" };
 
 		try {
