@@ -7,7 +7,7 @@ mgm perfLoad perfMon
 Copyright 2013 mgm technology partners GmbH
 
 From: 'Hyperic, Inc.' (http://www.hyperic.com/)
-  - SIGAR (http://sigar.hyperic.com/) org.hyperic:sigar:jar:1.6.5.132
+  - SIGAR (http://sigar.hyperic.com/) org.hyperic:sigar:jar:1.6.5.132-5
     License: Apache License Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 From: 'QOS.ch' (http://www.qos.ch)
