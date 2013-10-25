@@ -27,15 +27,8 @@ public class PerfMonSwap extends BasePerfMonCommand {
 
 	private static final String TYPE_SWAP = "swap";
 
-	private final String csvHeader = "swap_av<SEP>swap_used<SEP>swap_free".replace("<SEP>", separator);
-
-	public PerfMonSwap(final String separator, final boolean csv) {
-		super(separator, csv);
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
+	public PerfMonSwap(final String separator) {
+		super(separator);
 	}
 
 	@Override
@@ -44,11 +37,8 @@ public class PerfMonSwap extends BasePerfMonCommand {
 
 		try {
 			Swap swap = sigar.getSwap();
-
-			if (!csv) {
-				sb.append(TYPE_SWAP);
-				sb.append(separator);
-			}
+			sb.append(TYPE_SWAP);
+			sb.append(separator);
 			sb.append(swap.getTotal() / 1024L);
 			sb.append(separator);
 			sb.append(swap.getUsed() / 1024L);

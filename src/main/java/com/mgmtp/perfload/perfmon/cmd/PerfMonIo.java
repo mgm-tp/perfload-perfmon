@@ -36,17 +36,9 @@ public class PerfMonIo extends BasePerfMonCommand {
 	private final boolean normalize;
 	private final Map<String, Offset> offsets = new HashMap<String, Offset>();
 
-	private final String csvHeader = "io_numreads<SEP>io_numwrites<SEP>io_bytesread<SEP>io_byteswritten".replace("<SEP>",
-			separator);
-
-	public PerfMonIo(final String separator, final boolean csv, final boolean normalize) {
-		super(separator, csv);
+	public PerfMonIo(final String separator, final boolean normalize) {
+		super(separator);
 		this.normalize = normalize;
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
 	}
 
 	@Override
@@ -71,78 +63,41 @@ public class PerfMonIo extends BasePerfMonCommand {
 				}
 			}
 
-			if (csv) {
-				long reads = 0L;
-				long writes = 0L;
-				long readBytes = 0L;
-				long writeBytes = 0L;
+			for (int i = 0; i < fileSystems.length; ++i) {
+				FileSystem fileSystem = fileSystems[i];
+				if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
+					appendLineBreakIfNotEmpty(sb);
 
-				for (FileSystem fileSystem : fileSystems) {
-					if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
-						String dirName = fileSystem.getDirName();
-						FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
+					String dirName = fileSystem.getDirName();
+					FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
+					sb.append(TYPE_IO_X + i);
+					sb.append(separator);
 
-						if (normalize) {
-							Offset offset = offsets.get(dirName);
-							reads += usage.getDiskReads() - offset.diskReads;
-							writes += usage.getDiskWrites() - offset.diskWrites;
-							readBytes += usage.getDiskReadBytes() - offset.diskReadBytes;
-							writeBytes += usage.getDiskWriteBytes() - offset.diskWriteBytes;
-						} else {
-							reads += usage.getDiskReads();
-							writes += usage.getDiskWrites();
-							readBytes += usage.getDiskReadBytes();
-							writeBytes += usage.getDiskWriteBytes();
-						}
+					if (normalize) {
+						Offset offset = offsets.get(dirName);
+						sb.append(usage.getDiskReads() - offset.diskReads);
+						sb.append(separator);
+						sb.append(usage.getDiskWrites() - offset.diskWrites);
+						sb.append(separator);
+						sb.append(usage.getDiskReadBytes() - offset.diskReadBytes);
+						sb.append(separator);
+						sb.append(usage.getDiskWriteBytes() - offset.diskWriteBytes);
+					} else {
+						sb.append(usage.getDiskReads());
+						sb.append(separator);
+						sb.append(usage.getDiskWrites());
+						sb.append(separator);
+						sb.append(usage.getDiskReadBytes());
+						sb.append(separator);
+						sb.append(usage.getDiskWriteBytes());
 					}
-				}
 
-				sb.append(reads);
-				sb.append(separator);
-				sb.append(writes);
-				sb.append(separator);
-				sb.append(readBytes);
-				sb.append(separator);
-				sb.append(writeBytes);
-
-			} else {
-				for (int i = 0; i < fileSystems.length; ++i) {
-					FileSystem fileSystem = fileSystems[i];
-					if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
-						appendLineBreakIfNotEmpty(sb);
-
-						String dirName = fileSystem.getDirName();
-						FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
-						sb.append(TYPE_IO_X + i);
-						sb.append(separator);
-
-						if (normalize) {
-							Offset offset = offsets.get(dirName);
-							sb.append(usage.getDiskReads() - offset.diskReads);
-							sb.append(separator);
-							sb.append(usage.getDiskWrites() - offset.diskWrites);
-							sb.append(separator);
-							sb.append(usage.getDiskReadBytes() - offset.diskReadBytes);
-							sb.append(separator);
-							sb.append(usage.getDiskWriteBytes() - offset.diskWriteBytes);
-						} else {
-							sb.append(usage.getDiskReads());
-							sb.append(separator);
-							sb.append(usage.getDiskWrites());
-							sb.append(separator);
-							sb.append(usage.getDiskReadBytes());
-							sb.append(separator);
-							sb.append(usage.getDiskWriteBytes());
-						}
-
-						sb.append(separator);
-						sb.append(fileSystem.getDevName());
-						sb.append(separator);
-						sb.append(fileSystem.getDirName());
-					}
+					sb.append(separator);
+					sb.append(fileSystem.getDevName());
+					sb.append(separator);
+					sb.append(fileSystem.getDirName());
 				}
 			}
-
 		} catch (SigarException ex) {
 			log.error("Error reading IO information: " + ex.getMessage(), ex);
 		}

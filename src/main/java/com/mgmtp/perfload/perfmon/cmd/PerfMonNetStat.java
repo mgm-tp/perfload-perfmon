@@ -27,16 +27,8 @@ public class PerfMonNetStat extends BasePerfMonCommand {
 
 	private static final String TYPE_NET = "net";
 
-	private final String csvHeader = "ait<SEP>aot<SEP>bnd<SEP>cls<SEP>clsw<SEP>cli<SEP>est<SEP>fw1<SEP>fw2<SEP>idl<SEP>int<SEP>ack<SEP>lsn<SEP>ot<SEP>syr<SEP>sys<SEP>tiw"
-			.replace("<SEP>", separator);
-
-	public PerfMonNetStat(final String separator, final boolean csv) {
-		super(separator, csv);
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
+	public PerfMonNetStat(final String separator) {
+		super(separator);
 	}
 
 	@Override
@@ -64,11 +56,8 @@ public class PerfMonNetStat extends BasePerfMonCommand {
 			int tcpSynSent = net.getTcpSynSent();
 			int tcpTimeWait = net.getTcpTimeWait();
 
-			if (!csv) {
-				sb.append(TYPE_NET);
-				sb.append(separator);
-			}
-
+			sb.append(TYPE_NET);
+			sb.append(separator);
 			sb.append(allInboundTotal);
 			sb.append(separator);
 			sb.append(allOutboundTotal);

@@ -72,7 +72,6 @@ class PerfMon {
 	private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 
 	private final long interval;
-	private final boolean csv;
 	private final List<BasePerfMonCommand> commands;
 	private final OutputHandler outputHandler;
 
@@ -81,11 +80,10 @@ class PerfMon {
 	// It is important to use SigarProxyCache and to reuse the instance in order to avoid CPU spikes.
 	private final SigarProxy sigar;
 
-	PerfMon(final SigarProxy sigar, final long interval, final boolean csv, final List<BasePerfMonCommand> commands,
+	PerfMon(final SigarProxy sigar, final long interval, final List<BasePerfMonCommand> commands,
 			final OutputHandler outputHandler) {
 		this.sigar = sigar;
 		this.interval = interval;
-		this.csv = csv;
 		this.commands = commands;
 		this.outputHandler = outputHandler;
 	}
@@ -141,19 +139,7 @@ class PerfMon {
 			LOG.error("Error retrieving network interfaces.", ex);
 		}
 
-		if (csv) {
-			StrBuilder sb = new StrBuilder(200);
-			sb.append("timestamp");
-
-			for (BasePerfMonCommand cmd : commands) {
-				sb.append(SEPARATOR);
-				String header = cmd.getCsvHeader();
-				sb.append(header);
-			}
-			outputHandler.writeln(sb.toString());
-		} else {
-			outputHandler.writeln(metaBuffer.toString());
-		}
+		outputHandler.writeln(metaBuffer.toString());
 	}
 
 	void scheduleInformationGathering() {
@@ -164,7 +150,7 @@ class PerfMon {
 					StrBuilder buffer = new StrBuilder(2000);
 
 					for (BasePerfMonCommand cmd : commands) {
-						buffer.appendSeparator(csv ? SEPARATOR : PerfMonUtils.LINE_SEP);
+						buffer.appendSeparator(PerfMonUtils.LINE_SEP);
 						buffer.append(cmd.executeCommand(sigar));
 					}
 
@@ -211,7 +197,6 @@ class PerfMon {
 
 			long interval = Long.parseLong(cmd.getOptionValue('i', "5"));
 			String fileName = cmd.getOptionValue('f');
-			boolean csv = cmd.hasOption('c');
 			boolean java = cmd.hasOption('j');
 			boolean tcp = cmd.hasOption('t');
 			boolean normalizeTcp = cmd.hasOption("tn");
@@ -228,8 +213,8 @@ class PerfMon {
 				Sigar.load();
 
 				SigarProxy sigarProxy = SigarProxyCache.newInstance(sigar);
-				List<BasePerfMonCommand> commands = createCommandsList(csv, java, tcp, normalizeTcp, netstat, normalizeIo);
-				final PerfMon perfMon = new PerfMon(sigarProxy, interval, csv, commands, outputHandler);
+				List<BasePerfMonCommand> commands = createCommandsList(java, tcp, normalizeTcp, netstat, normalizeIo);
+				final PerfMon perfMon = new PerfMon(sigarProxy, interval, commands, outputHandler);
 
 				Runtime.getRuntime().addShutdownHook(new Thread() {
 					@Override
@@ -267,23 +252,23 @@ class PerfMon {
 		}
 	}
 
-	static List<BasePerfMonCommand> createCommandsList(final boolean csv, final boolean java, final boolean tcp,
+	static List<BasePerfMonCommand> createCommandsList(final boolean java, final boolean tcp,
 			final boolean normalizeTcp, final boolean netStat, final boolean normalizeIo) {
 
 		List<BasePerfMonCommand> commands = new ArrayList<BasePerfMonCommand>();
-		commands.add(new PerfMonCpu(SEPARATOR, csv));
-		commands.add(new PerfMonMem(SEPARATOR, csv));
-		commands.add(new PerfMonSwap(SEPARATOR, csv));
+		commands.add(new PerfMonCpu(SEPARATOR));
+		commands.add(new PerfMonMem(SEPARATOR));
+		commands.add(new PerfMonSwap(SEPARATOR));
 		if (tcp) {
-			commands.add(new PerfMonTcp(SEPARATOR, csv, normalizeTcp));
+			commands.add(new PerfMonTcp(SEPARATOR, normalizeTcp));
 		}
 		if (netStat) {
-			commands.add(new PerfMonNetStat(SEPARATOR, csv));
+			commands.add(new PerfMonNetStat(SEPARATOR));
 		}
-		commands.add(new PerfMonIo(SEPARATOR, csv, normalizeIo));
-		commands.add(new PerfMonProc(SEPARATOR, csv));
+		commands.add(new PerfMonIo(SEPARATOR, normalizeIo));
+		commands.add(new PerfMonProc(SEPARATOR));
 		if (java) {
-			commands.add(new PerfMonJava(SEPARATOR, csv));
+			commands.add(new PerfMonJava(SEPARATOR));
 		}
 		return commands;
 	}

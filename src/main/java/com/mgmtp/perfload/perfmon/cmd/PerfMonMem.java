@@ -27,16 +27,8 @@ public class PerfMonMem extends BasePerfMonCommand {
 
 	private static final String TYPE_MEM = "mem";
 
-	private final String csvHeader = "mem_av<SEP>mem_used<SEP>mem_free<SEP>mem_used_act<SEP>mem_free_act"
-			.replace("<SEP>", separator);
-
-	public PerfMonMem(final String separator, final boolean csv) {
-		super(separator, csv);
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
+	public PerfMonMem(final String separator) {
+		super(separator);
 	}
 
 	@Override
@@ -46,11 +38,8 @@ public class PerfMonMem extends BasePerfMonCommand {
 		try {
 			Mem mem = sigar.getMem();
 
-			if (!csv) {
-				sb.append(TYPE_MEM);
-				sb.append(separator);
-			}
-
+			sb.append(TYPE_MEM);
+			sb.append(separator);
 			sb.append(mem.getTotal() / 1024L);
 			sb.append(separator);
 			sb.append(mem.getUsed() / 1024L);

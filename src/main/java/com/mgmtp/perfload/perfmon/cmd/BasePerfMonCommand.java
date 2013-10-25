@@ -28,24 +28,14 @@ public abstract class BasePerfMonCommand {
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected final String separator;
-	protected final boolean csv;
 
 	/**
 	 * @param separator
 	 *            the separator to use when multiple values are returned by the command
-	 * @param csv
-	 *            {@code true}, if output is in CSV format
 	 */
-	public BasePerfMonCommand(final String separator, final boolean csv) {
+	public BasePerfMonCommand(final String separator) {
 		this.separator = separator;
-		this.csv = csv;
 	}
-
-	/**
-	 * @return the header for this command when CSV format is used, or {@null} if the command
-	 *         does not produce any csv output
-	 */
-	public abstract String getCsvHeader();
 
 	/**
 	 * Executes the command and returns its output as string.

@@ -40,17 +40,10 @@ public class PerfMonTcp extends BasePerfMonCommand {
 	private long initialOutRsts;
 
 	private boolean initialRun = true;
-	private final String csvHeader = "aco<SEP>pco<SEP>fca<SEP>crr<SEP>ce<SEP>sr<SEP>sso<SEP>srt<SEP>bsr<SEP>rs".replace("<SEP>",
-			separator);
 
-	public PerfMonTcp(final String separator, final boolean csv, final boolean normalize) {
-		super(separator, csv);
+	public PerfMonTcp(final String separator, final boolean normalize) {
+		super(separator);
 		this.normalize = normalize;
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
 	}
 
 	@Override
@@ -98,11 +91,8 @@ public class PerfMonTcp extends BasePerfMonCommand {
 				outRsts = outRsts - initialOutRsts;
 			}
 
-			if (!csv) {
-				sb.append(TYPE_TCP);
-				sb.append(separator);
-			}
-
+			sb.append(TYPE_TCP);
+			sb.append(separator);
 			sb.append(activeOpens); // active connections openings
 			sb.append(separator);
 			sb.append(passiveOpens); // passive connection openings

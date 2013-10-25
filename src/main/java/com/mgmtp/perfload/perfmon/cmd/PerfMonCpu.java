@@ -31,17 +31,8 @@ public class PerfMonCpu extends BasePerfMonCommand {
 	private static final String TYPE_CPU_AVG = "cpu_X";
 	private static final String TYPE_CPU_X = "cpu_";
 
-	private final String csvHeader =
-			"cpus<SEP>cpu_avg_combined<SEP>cpu_avg_user<SEP>cpu_avg_nice<SEP>cpu_avg_sys<SEP>cpu_avg_wait<SEP>cpu_avg_idle"
-					.replace("<SEP>", separator);
-
-	public PerfMonCpu(final String separator, final boolean csv) {
-		super(separator, csv);
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return csvHeader;
+	public PerfMonCpu(final String separator) {
+		super(separator);
 	}
 
 	@Override
@@ -52,23 +43,17 @@ public class PerfMonCpu extends BasePerfMonCommand {
 			CpuPerc[] cpus = sigar.getCpuPercList();
 			CpuPerc cpuAll = sigar.getCpuPerc();
 
-			if (csv) {
-				sb.append(cpus.length);
-				sb.append(separator);
-				writeCpu(sb, cpuAll);
-			} else {
-				sb.append(TYPE_CPU_AVG);
-				sb.append(separator);
-				writeCpu(sb, cpuAll);
+			sb.append(TYPE_CPU_AVG);
+			sb.append(separator);
+			writeCpu(sb, cpuAll);
 
-				if (cpus.length > 1) { // more than one CPU
-					appendLineBreak(sb);
-					for (int i = 0; i < cpus.length; i++) {
-						appendLineBreak(sb, i);
-						sb.append(TYPE_CPU_X + i);
-						sb.append(separator);
-						writeCpu(sb, cpus[i]);
-					}
+			if (cpus.length > 1) { // more than one CPU
+				appendLineBreak(sb);
+				for (int i = 0; i < cpus.length; i++) {
+					appendLineBreak(sb, i);
+					sb.append(TYPE_CPU_X + i);
+					sb.append(separator);
+					writeCpu(sb, cpus[i]);
 				}
 			}
 		} catch (SigarException ex) {

@@ -27,22 +27,12 @@ public class PerfMonProc extends BasePerfMonCommand {
 
 	private static final String TYPE_PROC = "proc";
 
-	public PerfMonProc(final String separator, final boolean csv) {
-		super(separator, csv);
-	}
-
-	@Override
-	public String getCsvHeader() {
-		return null;
+	public PerfMonProc(final String separator) {
+		super(separator);
 	}
 
 	@Override
 	public String executeCommand(final SigarProxy sigar) {
-		if (csv) {
-			// not included in CSV format
-			return null;
-		}
-
 		StrBuilder sb = new StrBuilder(200);
 
 		try {
