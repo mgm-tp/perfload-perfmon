@@ -27,23 +27,8 @@ public class PerfMonTcp extends BasePerfMonCommand {
 
 	private static final String TYPE_TCP = "tcp";
 
-	private final boolean normalize;
-	private long initialActiveOpens;
-	private long initialPassiveOpens;
-	private long initialAttemptFails;
-	private long initialEstabResets;
-	private long initialCurrEstab;
-	private long initialInSegs;
-	private long initialOutSegs;
-	private long initialRetransSegs;
-	private long initialInErrs;
-	private long initialOutRsts;
-
-	private boolean initialRun = true;
-
-	public PerfMonTcp(final String separator, final boolean normalize) {
+	public PerfMonTcp(final String separator) {
 		super(separator);
-		this.normalize = normalize;
 	}
 
 	@Override
@@ -64,33 +49,6 @@ public class PerfMonTcp extends BasePerfMonCommand {
 			long inErrs = tcp.getInErrs();
 			long outRsts = tcp.getOutRsts();
 
-			if (normalize) {
-				if (initialRun) {
-					initialActiveOpens = activeOpens;
-					initialPassiveOpens = passiveOpens;
-					initialAttemptFails = attemptFails;
-					initialEstabResets = estabResets;
-					initialCurrEstab = currEstab;
-					initialInSegs = inSegs;
-					initialOutSegs = outSegs;
-					initialRetransSegs = retransSegs;
-					initialInErrs = inErrs;
-					initialOutRsts = outRsts;
-					initialRun = false;
-				}
-
-				activeOpens = activeOpens - initialActiveOpens;
-				passiveOpens = passiveOpens - initialPassiveOpens;
-				attemptFails = attemptFails - initialAttemptFails;
-				estabResets = estabResets - initialEstabResets;
-				currEstab = currEstab - initialCurrEstab;
-				inSegs = inSegs - initialInSegs;
-				outSegs = outSegs - initialOutSegs;
-				retransSegs = retransSegs - initialRetransSegs;
-				inErrs = inErrs - initialInErrs;
-				outRsts = outRsts - initialOutRsts;
-			}
-
 			sb.append(TYPE_TCP);
 			sb.append(separator);
 			sb.append(activeOpens); // active connections openings
@@ -107,8 +65,8 @@ public class PerfMonTcp extends BasePerfMonCommand {
 			sb.append(separator);
 			sb.append(outSegs); // segments send out
 			sb.append(separator);
-			sb.append(retransSegs);
-			sb.append(separator); // segments retransmitted
+			sb.append(retransSegs); // segments retransmitted
+			sb.append(separator);
 			sb.append(inErrs); // bad segments received
 			sb.append(separator);
 			sb.append(outRsts); // resets sent

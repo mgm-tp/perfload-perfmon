@@ -33,12 +33,12 @@ public class PerfMonIo extends BasePerfMonCommand {
 
 	private static final String TYPE_IO_X = "io_";
 
-	private final boolean normalize;
 	private final Map<String, Offset> offsets = new HashMap<String, Offset>();
 
-	public PerfMonIo(final String separator, final boolean normalize) {
+	private FileSystem[] fileSystems;
+
+	public PerfMonIo(final String separator) {
 		super(separator);
-		this.normalize = normalize;
 	}
 
 	@Override
@@ -46,18 +46,20 @@ public class PerfMonIo extends BasePerfMonCommand {
 		StrBuilder sb = new StrBuilder(200);
 
 		try {
-			FileSystem[] fileSystems = sigar.getFileSystemList();
-			if (normalize && offsets.isEmpty()) {
+			if (fileSystems == null) {
+				fileSystems = sigar.getFileSystemList();
+			}
+			if (offsets.isEmpty()) {
 				for (FileSystem fileSystem : fileSystems) {
 					if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
 						String dirName = fileSystem.getDirName();
 						FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
 
 						Offset offset = new Offset();
-						offset.diskWrites = usage.getDiskWrites();
-						offset.diskWriteBytes = usage.getDiskWriteBytes();
 						offset.diskReads = usage.getDiskReads();
+						offset.diskWrites = usage.getDiskWrites();
 						offset.diskReadBytes = usage.getDiskReadBytes();
+						offset.diskWriteBytes = usage.getDiskWriteBytes();
 						offsets.put(dirName, offset);
 					}
 				}
@@ -70,32 +72,34 @@ public class PerfMonIo extends BasePerfMonCommand {
 
 					String dirName = fileSystem.getDirName();
 					FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
+					Offset offset = offsets.get(dirName);
+
 					sb.append(TYPE_IO_X + i);
 					sb.append(separator);
 
-					if (normalize) {
-						Offset offset = offsets.get(dirName);
-						sb.append(usage.getDiskReads() - offset.diskReads);
-						sb.append(separator);
-						sb.append(usage.getDiskWrites() - offset.diskWrites);
-						sb.append(separator);
-						sb.append(usage.getDiskReadBytes() - offset.diskReadBytes);
-						sb.append(separator);
-						sb.append(usage.getDiskWriteBytes() - offset.diskWriteBytes);
-					} else {
-						sb.append(usage.getDiskReads());
-						sb.append(separator);
-						sb.append(usage.getDiskWrites());
-						sb.append(separator);
-						sb.append(usage.getDiskReadBytes());
-						sb.append(separator);
-						sb.append(usage.getDiskWriteBytes());
-					}
+					long diskReads = usage.getDiskReads();
+					long diskWrites = usage.getDiskWrites();
+					long diskReadBytes = usage.getDiskReadBytes();
+					long diskWriteBytes = usage.getDiskWriteBytes();
+					log.debug("r={}, w={}, rb={}, wb={}", diskReads, diskWrites, diskReadBytes, diskWriteBytes);
+
+					sb.append(diskReads - offset.diskReads);
+					sb.append(separator);
+					sb.append(diskWrites - offset.diskWrites);
+					sb.append(separator);
+					sb.append(diskReadBytes - offset.diskReadBytes);
+					sb.append(separator);
+					sb.append(diskWriteBytes - offset.diskWriteBytes);
 
 					sb.append(separator);
 					sb.append(fileSystem.getDevName());
 					sb.append(separator);
 					sb.append(fileSystem.getDirName());
+
+					offset.diskReads = diskReads;
+					offset.diskWrites = diskWrites;
+					offset.diskReadBytes = diskReadBytes;
+					offset.diskWriteBytes = diskWriteBytes;
 				}
 			}
 		} catch (SigarException ex) {

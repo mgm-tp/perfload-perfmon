@@ -199,9 +199,7 @@ class PerfMon {
 			String fileName = cmd.getOptionValue('f');
 			boolean java = cmd.hasOption('j');
 			boolean tcp = cmd.hasOption('t');
-			boolean normalizeTcp = cmd.hasOption("tn");
 			boolean netstat = cmd.hasOption('n');
-			boolean normalizeIo = cmd.hasOption("in");
 
 			OutputHandler outputHandler = fileName != null ? new FileOutputHandler(fileName) : new ConsoleOutputHandler();
 			try {
@@ -213,7 +211,7 @@ class PerfMon {
 				Sigar.load();
 
 				SigarProxy sigarProxy = SigarProxyCache.newInstance(sigar);
-				List<BasePerfMonCommand> commands = createCommandsList(java, tcp, normalizeTcp, netstat, normalizeIo);
+				List<BasePerfMonCommand> commands = createCommandsList(java, tcp, netstat);
 				final PerfMon perfMon = new PerfMon(sigarProxy, interval, commands, outputHandler);
 
 				Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -252,20 +250,19 @@ class PerfMon {
 		}
 	}
 
-	static List<BasePerfMonCommand> createCommandsList(final boolean java, final boolean tcp,
-			final boolean normalizeTcp, final boolean netStat, final boolean normalizeIo) {
+	static List<BasePerfMonCommand> createCommandsList(final boolean java, final boolean tcp, final boolean netStat) {
 
 		List<BasePerfMonCommand> commands = new ArrayList<BasePerfMonCommand>();
 		commands.add(new PerfMonCpu(SEPARATOR));
 		commands.add(new PerfMonMem(SEPARATOR));
 		commands.add(new PerfMonSwap(SEPARATOR));
 		if (tcp) {
-			commands.add(new PerfMonTcp(SEPARATOR, normalizeTcp));
+			commands.add(new PerfMonTcp(SEPARATOR));
 		}
 		if (netStat) {
 			commands.add(new PerfMonNetStat(SEPARATOR));
 		}
-		commands.add(new PerfMonIo(SEPARATOR, normalizeIo));
+		commands.add(new PerfMonIo(SEPARATOR));
 		commands.add(new PerfMonProc(SEPARATOR));
 		if (java) {
 			commands.add(new PerfMonJava(SEPARATOR));
