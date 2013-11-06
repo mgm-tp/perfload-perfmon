@@ -32,26 +32,22 @@ public class PerfMonMem extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			Mem mem = sigar.getMem();
+		Mem mem = sigar.getMem();
 
-			sb.append(TYPE_MEM);
-			sb.append(separator);
-			sb.append(mem.getTotal() / 1024L);
-			sb.append(separator);
-			sb.append(mem.getUsed() / 1024L);
-			sb.append(separator);
-			sb.append(mem.getFree() / 1024L);
-			sb.append(separator);
-			sb.append(mem.getActualUsed() / 1024L);
-			sb.append(separator);
-			sb.append(mem.getActualFree() / 1024L);
-		} catch (SigarException ex) {
-			log.error("Error reading memory information: " + ex.getMessage(), ex);
-		}
+		sb.append(TYPE_MEM);
+		sb.append(separator);
+		sb.append(mem.getTotal() / 1024L);
+		sb.append(separator);
+		sb.append(mem.getUsed() / 1024L);
+		sb.append(separator);
+		sb.append(mem.getFree() / 1024L);
+		sb.append(separator);
+		sb.append(mem.getActualUsed() / 1024L);
+		sb.append(separator);
+		sb.append(mem.getActualFree() / 1024L);
 
 		return sb.toString();
 	}

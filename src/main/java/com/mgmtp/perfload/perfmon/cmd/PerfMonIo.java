@@ -42,68 +42,64 @@ public class PerfMonIo extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			if (fileSystems == null) {
-				fileSystems = sigar.getFileSystemList();
-			}
-			if (offsets.isEmpty()) {
-				for (FileSystem fileSystem : fileSystems) {
-					if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
-						String dirName = fileSystem.getDirName();
-						FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
-
-						Offset offset = new Offset();
-						offset.diskReads = usage.getDiskReads();
-						offset.diskWrites = usage.getDiskWrites();
-						offset.diskReadBytes = usage.getDiskReadBytes();
-						offset.diskWriteBytes = usage.getDiskWriteBytes();
-						offsets.put(dirName, offset);
-					}
-				}
-			}
-
-			for (int i = 0; i < fileSystems.length; ++i) {
-				FileSystem fileSystem = fileSystems[i];
+		if (fileSystems == null) {
+			fileSystems = sigar.getFileSystemList();
+		}
+		if (offsets.isEmpty()) {
+			for (FileSystem fileSystem : fileSystems) {
 				if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
-					appendLineBreakIfNotEmpty(sb);
-
 					String dirName = fileSystem.getDirName();
 					FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
-					Offset offset = offsets.get(dirName);
 
-					sb.append(TYPE_IO_X + i);
-					sb.append(separator);
-
-					long diskReads = usage.getDiskReads();
-					long diskWrites = usage.getDiskWrites();
-					long diskReadBytes = usage.getDiskReadBytes();
-					long diskWriteBytes = usage.getDiskWriteBytes();
-					log.debug("r={}, w={}, rb={}, wb={}", diskReads, diskWrites, diskReadBytes, diskWriteBytes);
-
-					sb.append(diskReads - offset.diskReads);
-					sb.append(separator);
-					sb.append(diskWrites - offset.diskWrites);
-					sb.append(separator);
-					sb.append(diskReadBytes - offset.diskReadBytes);
-					sb.append(separator);
-					sb.append(diskWriteBytes - offset.diskWriteBytes);
-
-					sb.append(separator);
-					sb.append(fileSystem.getDevName());
-					sb.append(separator);
-					sb.append(fileSystem.getDirName());
-
-					offset.diskReads = diskReads;
-					offset.diskWrites = diskWrites;
-					offset.diskReadBytes = diskReadBytes;
-					offset.diskWriteBytes = diskWriteBytes;
+					Offset offset = new Offset();
+					offset.diskReads = usage.getDiskReads();
+					offset.diskWrites = usage.getDiskWrites();
+					offset.diskReadBytes = usage.getDiskReadBytes();
+					offset.diskWriteBytes = usage.getDiskWriteBytes();
+					offsets.put(dirName, offset);
 				}
 			}
-		} catch (SigarException ex) {
-			log.error("Error reading IO information: " + ex.getMessage(), ex);
+		}
+
+		for (int i = 0; i < fileSystems.length; ++i) {
+			FileSystem fileSystem = fileSystems[i];
+			if (fileSystem.getType() == FileSystem.TYPE_LOCAL_DISK) {
+				appendLineBreakIfNotEmpty(sb);
+
+				String dirName = fileSystem.getDirName();
+				FileSystemUsage usage = sigar.getFileSystemUsage(dirName);
+				Offset offset = offsets.get(dirName);
+
+				sb.append(TYPE_IO_X + i);
+				sb.append(separator);
+
+				long diskReads = usage.getDiskReads();
+				long diskWrites = usage.getDiskWrites();
+				long diskReadBytes = usage.getDiskReadBytes();
+				long diskWriteBytes = usage.getDiskWriteBytes();
+				log.debug("r={}, w={}, rb={}, wb={}", diskReads, diskWrites, diskReadBytes, diskWriteBytes);
+
+				sb.append(diskReads - offset.diskReads);
+				sb.append(separator);
+				sb.append(diskWrites - offset.diskWrites);
+				sb.append(separator);
+				sb.append(diskReadBytes - offset.diskReadBytes);
+				sb.append(separator);
+				sb.append(diskWriteBytes - offset.diskWriteBytes);
+
+				sb.append(separator);
+				sb.append(fileSystem.getDevName());
+				sb.append(separator);
+				sb.append(fileSystem.getDirName());
+
+				offset.diskReads = diskReads;
+				offset.diskWrites = diskWrites;
+				offset.diskReadBytes = diskReadBytes;
+				offset.diskWriteBytes = diskWriteBytes;
+			}
 		}
 
 		return sb.toString();

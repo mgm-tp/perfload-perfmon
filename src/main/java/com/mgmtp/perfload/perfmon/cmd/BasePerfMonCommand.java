@@ -15,6 +15,7 @@
  */
 package com.mgmtp.perfload.perfmon.cmd;
 
+import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,5 +45,5 @@ public abstract class BasePerfMonCommand {
 	 *            the SigarProxy instance to use for querying system information
 	 * @return the commands' output
 	 */
-	public abstract String executeCommand(SigarProxy sigar);
+	public abstract String executeCommand(SigarProxy sigar) throws SigarException;
 }

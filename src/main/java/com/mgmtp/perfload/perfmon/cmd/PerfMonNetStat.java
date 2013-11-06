@@ -32,68 +32,64 @@ public class PerfMonNetStat extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			NetStat net = sigar.getNetStat();
+		NetStat net = sigar.getNetStat();
 
-			int allInboundTotal = net.getAllInboundTotal();
-			int allOutboundTotal = net.getAllOutboundTotal();
-			int tcpBound = net.getTcpBound();
-			int tcpClose = net.getTcpClose();
-			int tcpCloseWait = net.getTcpCloseWait();
-			int tcpClosing = net.getTcpClosing();
-			int tcpEstablished = net.getTcpEstablished();
-			int tcpFinWait1 = net.getTcpFinWait1();
-			int tcpFinWait2 = net.getTcpFinWait2();
-			int tcpIdle = net.getTcpIdle();
-			int tcpInboundTotal = net.getTcpInboundTotal();
-			int tcpLastAck = net.getTcpLastAck();
-			int tcpListen = net.getTcpListen();
-			int tcpOutboundTotal = net.getTcpOutboundTotal();
-			int tcpSynRecv = net.getTcpSynRecv();
-			int tcpSynSent = net.getTcpSynSent();
-			int tcpTimeWait = net.getTcpTimeWait();
+		int allInboundTotal = net.getAllInboundTotal();
+		int allOutboundTotal = net.getAllOutboundTotal();
+		int tcpBound = net.getTcpBound();
+		int tcpClose = net.getTcpClose();
+		int tcpCloseWait = net.getTcpCloseWait();
+		int tcpClosing = net.getTcpClosing();
+		int tcpEstablished = net.getTcpEstablished();
+		int tcpFinWait1 = net.getTcpFinWait1();
+		int tcpFinWait2 = net.getTcpFinWait2();
+		int tcpIdle = net.getTcpIdle();
+		int tcpInboundTotal = net.getTcpInboundTotal();
+		int tcpLastAck = net.getTcpLastAck();
+		int tcpListen = net.getTcpListen();
+		int tcpOutboundTotal = net.getTcpOutboundTotal();
+		int tcpSynRecv = net.getTcpSynRecv();
+		int tcpSynSent = net.getTcpSynSent();
+		int tcpTimeWait = net.getTcpTimeWait();
 
-			sb.append(TYPE_NET);
-			sb.append(separator);
-			sb.append(allInboundTotal);
-			sb.append(separator);
-			sb.append(allOutboundTotal);
-			sb.append(separator);
-			sb.append(tcpBound);
-			sb.append(separator);
-			sb.append(tcpClose);
-			sb.append(separator);
-			sb.append(tcpCloseWait);
-			sb.append(separator);
-			sb.append(tcpClosing);
-			sb.append(separator);
-			sb.append(tcpEstablished);
-			sb.append(separator);
-			sb.append(tcpFinWait1);
-			sb.append(separator);
-			sb.append(tcpFinWait2);
-			sb.append(separator);
-			sb.append(tcpIdle);
-			sb.append(separator);
-			sb.append(tcpInboundTotal);
-			sb.append(separator);
-			sb.append(tcpLastAck);
-			sb.append(separator);
-			sb.append(tcpListen);
-			sb.append(separator);
-			sb.append(tcpOutboundTotal);
-			sb.append(separator);
-			sb.append(tcpSynRecv);
-			sb.append(separator);
-			sb.append(tcpSynSent);
-			sb.append(separator);
-			sb.append(tcpTimeWait);
-		} catch (SigarException ex) {
-			log.error("Error reading network statistics: " + ex.getMessage(), ex);
-		}
+		sb.append(TYPE_NET);
+		sb.append(separator);
+		sb.append(allInboundTotal);
+		sb.append(separator);
+		sb.append(allOutboundTotal);
+		sb.append(separator);
+		sb.append(tcpBound);
+		sb.append(separator);
+		sb.append(tcpClose);
+		sb.append(separator);
+		sb.append(tcpCloseWait);
+		sb.append(separator);
+		sb.append(tcpClosing);
+		sb.append(separator);
+		sb.append(tcpEstablished);
+		sb.append(separator);
+		sb.append(tcpFinWait1);
+		sb.append(separator);
+		sb.append(tcpFinWait2);
+		sb.append(separator);
+		sb.append(tcpIdle);
+		sb.append(separator);
+		sb.append(tcpInboundTotal);
+		sb.append(separator);
+		sb.append(tcpLastAck);
+		sb.append(separator);
+		sb.append(tcpListen);
+		sb.append(separator);
+		sb.append(tcpOutboundTotal);
+		sb.append(separator);
+		sb.append(tcpSynRecv);
+		sb.append(separator);
+		sb.append(tcpSynSent);
+		sb.append(separator);
+		sb.append(tcpTimeWait);
 
 		return sb.toString();
 	}

@@ -150,8 +150,13 @@ class PerfMon {
 					StrBuilder buffer = new StrBuilder(2000);
 
 					for (BasePerfMonCommand cmd : commands) {
-						buffer.appendSeparator(PerfMonUtils.LINE_SEP);
-						buffer.append(cmd.executeCommand(sigar));
+						try {
+							String result = cmd.executeCommand(sigar);
+							buffer.appendSeparator(PerfMonUtils.LINE_SEP);
+							buffer.append(result);
+						} catch (SigarException ex) {
+							LOG.error("Error executing command: {}" + cmd.getClass().getSimpleName(), ex);
+						}
 					}
 
 					String output = buffer.toString();
@@ -285,9 +290,7 @@ class PerfMon {
 			options.addOption("c", "csv", false, "Write all data in one line for easier import in tools such as Excel.");
 			options.addOption("j", "java", false, "Write information on Java processes.");
 			options.addOption("t", "tcp", false, "Write TCP connection information.");
-			options.addOption("tn", "normalize-tcp", false, "Normalize TCP connection information against an initial offset.");
 			options.addOption("n", "netstat", false, "Write network statistics");
-			options.addOption("in", "normalize-io", false, "Normalize IO information against an initial offset.");
 			options.addOption("s", "shutdown", false, "Shutdown all running perfMon processes on this machine.");
 			options.addOption("h", "help", false, "Prints usage information.");
 

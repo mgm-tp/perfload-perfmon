@@ -32,47 +32,43 @@ public class PerfMonTcp extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			Tcp tcp = sigar.getTcp();
+		Tcp tcp = sigar.getTcp();
 
-			long activeOpens = tcp.getActiveOpens();
-			long passiveOpens = tcp.getPassiveOpens();
-			long attemptFails = tcp.getAttemptFails();
-			long estabResets = tcp.getEstabResets();
-			long currEstab = tcp.getCurrEstab();
-			long inSegs = tcp.getInSegs();
-			long outSegs = tcp.getOutSegs();
-			long retransSegs = tcp.getRetransSegs();
-			long inErrs = tcp.getInErrs();
-			long outRsts = tcp.getOutRsts();
+		long activeOpens = tcp.getActiveOpens();
+		long passiveOpens = tcp.getPassiveOpens();
+		long attemptFails = tcp.getAttemptFails();
+		long estabResets = tcp.getEstabResets();
+		long currEstab = tcp.getCurrEstab();
+		long inSegs = tcp.getInSegs();
+		long outSegs = tcp.getOutSegs();
+		long retransSegs = tcp.getRetransSegs();
+		long inErrs = tcp.getInErrs();
+		long outRsts = tcp.getOutRsts();
 
-			sb.append(TYPE_TCP);
-			sb.append(separator);
-			sb.append(activeOpens); // active connections openings
-			sb.append(separator);
-			sb.append(passiveOpens); // passive connection openings
-			sb.append(separator);
-			sb.append(attemptFails); // failed connection attempts
-			sb.append(separator);
-			sb.append(estabResets); // connection resets received
-			sb.append(separator);
-			sb.append(currEstab);// connections established
-			sb.append(separator);
-			sb.append(inSegs); // segments received
-			sb.append(separator);
-			sb.append(outSegs); // segments send out
-			sb.append(separator);
-			sb.append(retransSegs); // segments retransmitted
-			sb.append(separator);
-			sb.append(inErrs); // bad segments received
-			sb.append(separator);
-			sb.append(outRsts); // resets sent
-		} catch (SigarException ex) {
-			log.error("Error reading TCP information: " + ex.getMessage(), ex);
-		}
+		sb.append(TYPE_TCP);
+		sb.append(separator);
+		sb.append(activeOpens); // active connections openings
+		sb.append(separator);
+		sb.append(passiveOpens); // passive connection openings
+		sb.append(separator);
+		sb.append(attemptFails); // failed connection attempts
+		sb.append(separator);
+		sb.append(estabResets); // connection resets received
+		sb.append(separator);
+		sb.append(currEstab);// connections established
+		sb.append(separator);
+		sb.append(inSegs); // segments received
+		sb.append(separator);
+		sb.append(outSegs); // segments send out
+		sb.append(separator);
+		sb.append(retransSegs); // segments retransmitted
+		sb.append(separator);
+		sb.append(inErrs); // bad segments received
+		sb.append(separator);
+		sb.append(outRsts); // resets sent
 
 		return sb.toString();
 	}

@@ -36,28 +36,24 @@ public class PerfMonCpu extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			CpuPerc[] cpus = sigar.getCpuPercList();
-			CpuPerc cpuAll = sigar.getCpuPerc();
+		CpuPerc[] cpus = sigar.getCpuPercList();
+		CpuPerc cpuAll = sigar.getCpuPerc();
 
-			sb.append(TYPE_CPU_AVG);
-			sb.append(separator);
-			writeCpu(sb, cpuAll);
+		sb.append(TYPE_CPU_AVG);
+		sb.append(separator);
+		writeCpu(sb, cpuAll);
 
-			if (cpus.length > 1) { // more than one CPU
-				appendLineBreak(sb);
-				for (int i = 0; i < cpus.length; i++) {
-					appendLineBreak(sb, i);
-					sb.append(TYPE_CPU_X + i);
-					sb.append(separator);
-					writeCpu(sb, cpus[i]);
-				}
+		if (cpus.length > 1) { // more than one CPU
+			appendLineBreak(sb);
+			for (int i = 0; i < cpus.length; i++) {
+				appendLineBreak(sb, i);
+				sb.append(TYPE_CPU_X + i);
+				sb.append(separator);
+				writeCpu(sb, cpus[i]);
 			}
-		} catch (SigarException ex) {
-			log.error("Error reading CPU information: " + ex.getMessage(), ex);
 		}
 
 		return sb.toString();

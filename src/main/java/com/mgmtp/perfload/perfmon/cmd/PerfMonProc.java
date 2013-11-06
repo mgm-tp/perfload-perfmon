@@ -32,30 +32,26 @@ public class PerfMonProc extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			ProcStat procStat = sigar.getProcStat();
+		ProcStat procStat = sigar.getProcStat();
 
-			sb.append(TYPE_PROC);
-			sb.append(separator);
-			sb.append(procStat.getTotal());
-			sb.append(separator);
-			sb.append(procStat.getRunning());
-			sb.append(separator);
-			sb.append(procStat.getIdle());
-			sb.append(separator);
-			sb.append(procStat.getSleeping());
-			sb.append(separator);
-			sb.append(procStat.getStopped());
-			sb.append(separator);
-			sb.append(procStat.getZombie());
-			sb.append(separator);
-			sb.append(procStat.getThreads());
-		} catch (SigarException ex) {
-			log.error("Error reading process information: " + ex.getMessage(), ex);
-		}
+		sb.append(TYPE_PROC);
+		sb.append(separator);
+		sb.append(procStat.getTotal());
+		sb.append(separator);
+		sb.append(procStat.getRunning());
+		sb.append(separator);
+		sb.append(procStat.getIdle());
+		sb.append(separator);
+		sb.append(procStat.getSleeping());
+		sb.append(separator);
+		sb.append(procStat.getStopped());
+		sb.append(separator);
+		sb.append(procStat.getZombie());
+		sb.append(separator);
+		sb.append(procStat.getThreads());
 
 		return sb.toString();
 	}

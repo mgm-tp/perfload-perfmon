@@ -40,34 +40,26 @@ public class PerfMonJava extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			String[] type = new String[] { "State.Name.sw=java" };
-			long[] pids = Shell.getPids(sigar, type);
+		String[] type = new String[] { "State.Name.sw=java" };
+		long[] pids = Shell.getPids(sigar, type);
 
-			for (int i = 0; i < pids.length; i++) {
-				appendLineBreak(sb, i);
+		for (int i = 0; i < pids.length; i++) {
+			appendLineBreak(sb, i);
 
-				sb.append(TYPE_JAVA_X + i);
-				sb.append(separator);
-				long pid = pids[i];
+			sb.append(TYPE_JAVA_X + i);
+			sb.append(separator);
+			long pid = pids[i];
 
-				String cpuPerc = "?";
-				@SuppressWarnings("unchecked")
-				List<Object> info = new ArrayList<Object>(Ps.getInfo(sigar, pid));
-				try {
-					ProcCpu cpu = sigar.getProcCpu(pid);
-					cpuPerc = CpuPerc.format(cpu.getPercent());
-				} catch (SigarException ex) {
-					log.error(ex.getMessage(), ex);
-				}
-				info.add(info.size() - 1, cpuPerc);
-				sb.append(Ps.join(info));
-			}
-		} catch (SigarException ex) {
-			log.error("Error reading Java processes: " + ex.getMessage(), ex);
+			String cpuPerc = "?";
+			@SuppressWarnings("unchecked")
+			List<Object> info = new ArrayList<Object>(Ps.getInfo(sigar, pid));
+			ProcCpu cpu = sigar.getProcCpu(pid);
+			cpuPerc = CpuPerc.format(cpu.getPercent());
+			info.add(info.size() - 1, cpuPerc);
+			sb.append(Ps.join(info));
 		}
 
 		return sb.toString();

@@ -32,21 +32,18 @@ public class PerfMonSwap extends BasePerfMonCommand {
 	}
 
 	@Override
-	public String executeCommand(final SigarProxy sigar) {
+	public String executeCommand(final SigarProxy sigar) throws SigarException {
 		StrBuilder sb = new StrBuilder(200);
 
-		try {
-			Swap swap = sigar.getSwap();
-			sb.append(TYPE_SWAP);
-			sb.append(separator);
-			sb.append(swap.getTotal() / 1024L);
-			sb.append(separator);
-			sb.append(swap.getUsed() / 1024L);
-			sb.append(separator);
-			sb.append(swap.getFree() / 1024L);
-		} catch (SigarException ex) {
-			log.error("Error reading swap information: " + ex.getMessage(), ex);
-		}
+		Swap swap = sigar.getSwap();
+
+		sb.append(TYPE_SWAP);
+		sb.append(separator);
+		sb.append(swap.getTotal() / 1024L);
+		sb.append(separator);
+		sb.append(swap.getUsed() / 1024L);
+		sb.append(separator);
+		sb.append(swap.getFree() / 1024L);
 
 		return sb.toString();
 	}
