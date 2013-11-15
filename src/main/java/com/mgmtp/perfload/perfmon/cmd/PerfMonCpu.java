@@ -28,8 +28,8 @@ import org.hyperic.sigar.SigarProxy;
  */
 public class PerfMonCpu extends BasePerfMonCommand {
 
-	private static final String TYPE_CPU_AVG = "cpu_X";
-	private static final String TYPE_CPU_X = "cpu_";
+	private static final String TYPE_CPU_X = "cpu_X";
+	private static final String TYPE_CPU = "cpu_";
 
 	public PerfMonCpu(final String separator) {
 		super(separator);
@@ -42,7 +42,7 @@ public class PerfMonCpu extends BasePerfMonCommand {
 		CpuPerc[] cpus = sigar.getCpuPercList();
 		CpuPerc cpuAll = sigar.getCpuPerc();
 
-		sb.append(TYPE_CPU_AVG);
+		sb.append(TYPE_CPU_X);
 		sb.append(separator);
 		writeCpu(sb, cpuAll);
 
@@ -50,7 +50,7 @@ public class PerfMonCpu extends BasePerfMonCommand {
 			appendLineBreak(sb);
 			for (int i = 0; i < cpus.length; i++) {
 				appendLineBreak(sb, i);
-				sb.append(TYPE_CPU_X + i);
+				sb.append(TYPE_CPU + i);
 				sb.append(separator);
 				writeCpu(sb, cpus[i]);
 			}
